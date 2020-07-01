@@ -1,0 +1,7 @@
+package rules;
+dialect  "mvel"
+
+rule "Reccomend tank based on player buying history"
+    when
+    then
+end

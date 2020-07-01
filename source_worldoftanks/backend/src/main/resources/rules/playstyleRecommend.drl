@@ -1,0 +1,20 @@
+package rules;
+import com.example.WoTRecommender.model.Tank;
+import com.example.WoTRecommender.model.User;
+import com.example.WoTRecommender.model.TankCharacteristics;
+
+rule "Recommend tank based on characteristics chosen by user"
+	salience ((100*$value) / $characteristics.size())
+    when
+        $t: Tank($name: name, $characteristics: characteristics)
+        $u: User($user_characteristics: user_characteristics) // sta je korisnik rekao da zeli
+        Number($value: intValue >= 2) from accumulate(
+        	TankCharacteristics($c:this, this memberOf $characteristics) from $user_characteristics,
+        	count($c)
+        )
+    then
+    	System.out.println("Tank: " + $name);
+    	System.out.println("Number of characteristics: " + $value + "/" + $characteristics.size());
+    	modify($u) { setCurrentTank($t) }
+end
+

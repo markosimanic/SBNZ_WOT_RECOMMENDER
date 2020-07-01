@@ -1,0 +1,34 @@
+package rules;
+dialect  "mvel"
+
+import com.example.WoTRecommender.model.User;
+import com.example.WoTRecommender.model.UserCategory;
+import com.example.WoTRecommender.model.TankType;
+import com.example.WoTRecommender.model.Tank;
+import java.util.List;
+
+rule "If user bougth thanks in value more than 100$, set user category to gold"
+    when
+        $u: User(userCategory == UserCategory.NA, discount==false, paidmoney>=100)
+    then
+    	modify($u) {setUserCategory(UserCategory.GOLD)}
+end
+
+rule "If user have GOLD category, add 50$ to his account balance but only once"
+    no-loop
+    when
+        $u: User(userCategory == UserCategory.GOLD, paidmoney>=100,$bl : balance)
+    then
+    	System.out.println("Discount rule");
+       	modify($u) { setBalance($bl+50) , setDiscount(true) }
+end
+
+//rule "Apply 20% discount to all HEAVY tanks with price over 3000"
+//   when $listOfTanks : List($t : Tank)
+//   Number(intValue >= 10) from accumulate(
+//        $listOfTanks(
+//            $t.price >= 3000
+//            $q :quantity
+//        )from $listOfTanks
+//   )
+//end

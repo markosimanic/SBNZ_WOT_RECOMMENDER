@@ -1,0 +1,7 @@
+package rules;
+dialect  "mvel"
+
+rule "Reccomend tank with most similarities with tank that user plays best"
+    when
+    then
+end
