@@ -16,7 +16,7 @@ public class DroolsConfig {
 
     private KieFileSystem getKieFileSystem() throws IOException {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        kieFileSystem.write(ResourceFactory.newClassPathResource("rules/userDiscount.drl"));
+        kieFileSystem.write(ResourceFactory.newClassPathResource("rules/UserDiscount.drl"));
         return kieFileSystem;
 
     }

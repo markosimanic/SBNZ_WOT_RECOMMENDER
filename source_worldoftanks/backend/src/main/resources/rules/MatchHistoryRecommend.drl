@@ -1,6 +1,12 @@
 package rules;
 dialect  "mvel"
 
+
+rule "Find tank that user plays best"
+    when
+    then
+end
+
 rule "Reccomend tank with most similarities with tank that user plays best"
     when
     then

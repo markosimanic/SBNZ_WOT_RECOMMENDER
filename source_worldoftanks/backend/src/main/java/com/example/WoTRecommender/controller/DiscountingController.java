@@ -5,6 +5,8 @@ import com.example.WoTRecommender.repository.UserRepository;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,10 +26,11 @@ public class DiscountingController {
         return userRepository.findAll();
     }
 
-    @PostMapping(path ="/setDiscount/{username}")
-    public User setUserDiscount(@PathVariable String username){
-
-        User u = userRepository.findByUsername(username);
+    @PostMapping(path ="/setDiscount")
+    public User setUserDiscount(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        User u = userRepository.findByUsername(currentPrincipalName);
         session.insert(u);
         session.fireAllRules();
         return u;

@@ -1,6 +1,8 @@
 package rules;
 dialect  "mvel"
 
+// buying history bi bili svi tenkovi koje korisnik ima
+// pronaci slicne karakteristike svih tenkova koje poseduje i ukoliko je moguce izgenerisati preporuceni tenk
 rule "Reccomend tank based on player buying history"
     when
     then

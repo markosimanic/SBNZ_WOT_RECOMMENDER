@@ -27,7 +27,6 @@ public class RecommendController {
 
     @PostMapping(path = "/playstyle")
     public User recommendTankPlaystyle(){
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         User user  = userRepository.findByUsername(currentPrincipalName);
@@ -41,7 +40,6 @@ public class RecommendController {
         }
         session.fireAllRules();
         return user;
-
     }
 
 }

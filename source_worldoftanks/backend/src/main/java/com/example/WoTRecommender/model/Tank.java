@@ -17,6 +17,10 @@ public class Tank {
     @Column(name="price")
     private Integer price;
 
+    @Column(name="tank_status")
+    @Enumerated(EnumType.STRING)
+    private TankStatus tankStatus;
+
     @Enumerated(EnumType.STRING)
     private TankType tankType;
 
@@ -26,8 +30,6 @@ public class Tank {
             inverseJoinColumns = @JoinColumn(name = "characteristics_id", referencedColumnName = "id"))
     private List<Characteristics> characteristics;
 
-//    @OneToMany(mappedBy = "tank")
-//    private List<UserTank> users;
 
     public Tank() {
     }
@@ -57,9 +59,13 @@ public class Tank {
         this.characteristics = characteristics;
     }
 
-//    public void setUsers(List<UserTank> users) {
-//        this.users = users;
-//    }
+    public TankStatus getTankStatus() {
+        return tankStatus;
+    }
+
+    public void setTankStatus(TankStatus tankStatus) {
+        this.tankStatus = tankStatus;
+    }
 
     public Long getId() {
         return id;
@@ -76,8 +82,5 @@ public class Tank {
     public Collection<Characteristics> getCharacteristics() {
         return characteristics;
     }
-//
-//    public List<UserTank> getUsers() {
-//        return users;
-//    }
+
 }
