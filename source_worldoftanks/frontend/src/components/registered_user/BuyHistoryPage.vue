@@ -1,17 +1,8 @@
 <template>
     <div id="tanksPage">
         <div id="headline">
-                <h4>ALL TANKS</h4>
-        </div>
-        <div id="characteristics">
-             <div id="checksInside" v-for="(char, index) in chars" :key="index">
-             <input type="checkbox" :id="char.name" v-model="char.checked">
-             <label :for="char.name">{{ char.name }}</label>
-        </div>
-        </div>
-        <div id="buttonDiv">
-             <b-button>Filter tanks</b-button>
-        </div>
+                <h4>TANKS YOU OWN</h4>
+        </div>>
     <table id="table">
       <thead>
           <tr>
@@ -36,13 +27,13 @@ import { AXIOS } from '../../http-commons'
       return {
         columns : ["name", "tankType"],
         items : [],
-        chars : [],
         error: null
     }
     }, methods : {
-        getAllTanks(){
+        getAllUserTanks(){
             this.error = null
-            AXIOS.get('/tanks/getAllTanks')
+            AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+            AXIOS.get('/users/getAllUserTanks')
             .then(response => {
                     if (response.status == 200){
                         localStorage.setItem('token', response.data.accessToken);
@@ -57,26 +48,9 @@ import { AXIOS } from '../../http-commons'
                         console.log(this.error)
                     } 
                 })
-        },populateChecks(){
-            this.error = null
-            AXIOS.get('/tanks/getAllChars')
-            .then(response => {
-                    if (response.status == 200){
-                        localStorage.setItem('token', response.data.accessToken);
-                        this.chars = response.data   
-                        console.log(response)    
-                    } 
-                })
-                .catch(err => {
-                    if (err.response.status == 400) {
-                        this.errorMessage = "Some error has occured!";
-                        this.error = true
-                    } 
-                })
         }
     }, mounted(){
-         this.getAllTanks()
-         this.populateChecks()
+         this.getAllUserTanks()
      }
  }
 </script>
@@ -85,24 +59,22 @@ import { AXIOS } from '../../http-commons'
 
  #table{
     position: fixed;
-    top: 71%;
-    left: 50%;
+    top: 40%;
+    left: 27%;
     transform: translate(-50%, -50%);
     width: 50%;
     height: 50%;
     background-color: rgba(182, 181, 181, 0.918);
     display: table;
     transition: opacity .3s ease;
-     border-radius:20px;
+    border-radius:20px;
     border: 1px solid black;
     border-collapse:separate;
-  
-   
  }
 
  th, td{
      border-left:solid black 1px;
-    border-top:solid black 1px;
+     border-top:solid black 1px;
  }
 
  th {
@@ -132,34 +104,4 @@ h4 {
     text-shadow: #6C6B6B;
 }
 
-#characteristics{
-    position: fixed;
-    top: 26%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30%;
-    height: 10%;
-    background-color: rgba(182, 181, 181, 0.918);
-    display: table;
-    transition: opacity .3s ease;
-    border-radius:20px;
-    border: 1px solid black;
-    border-collapse:separate;
-    opacity: 0.9;
-}
-
-#checksInside{
-    display: inline-block;
-}
-
-#buttonDiv{
-     position: fixed;
-    top: 41%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid black;
-    border-radius:5px;
-    border: 2px solid black;
-    border-collapse:separate;
-}
 </style>

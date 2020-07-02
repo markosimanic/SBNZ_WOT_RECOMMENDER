@@ -6,6 +6,9 @@ import LoginPage from '@/components/homepage/LoginPage'
 import RegisteredUserHomePage from '@/components/registered_user/RegisteredUserHomePage'
 import PlaystylePage from '@/components/registered_user/PlaystylePage'
 import AllTanksPage from '@/components/registered_user/AllTanksPage'
+import UserStatsPage from '@/components/registered_user/UserStatsPage'
+import BuyHistoryPage from '@/components/registered_user/BuyHistoryPage'
+
 
 Vue.use(Router)
 
@@ -28,6 +31,14 @@ export default new Router({
         {
             path:'/all',
             component: AllTanksPage
+        },
+        {
+            path:'/stats',
+            component: UserStatsPage
+        },
+        {
+            path:'/yourtanks',
+            component:BuyHistoryPage
         }
     ]
 })

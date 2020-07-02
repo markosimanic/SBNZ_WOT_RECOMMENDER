@@ -1,13 +1,17 @@
 <template>
     <div>
-        <h1>CHOOSE YOUR BEST TANK CHARACTERISTICS!</h1>
+        <h1 id="mainh1">CHOOSE YOUR BEST TANK CHARACTERISTICS!</h1>
         <div id="checksDiv">
         <div id="checksInside" v-for="(item, index) in items" :key="index">
           <input type="checkbox" :id="item.name" v-model="item.checked">
           <label :for="item.name">{{ item.name }}</label>
         </div>
+        <div id="tankDiv">
         </div>
-      <span>Checked names: {{ checkedNames }}</span>
+        <div id="buttonDiv">
+          <b-button @click="findBestTank">Submit characteristics</b-button>
+        </div> 
+        </div>
     </div>
 </template>
 
@@ -39,22 +43,34 @@ import { AXIOS } from '../../http-commons'
                         this.error = true
                     } 
                 })
-        }
-    } ,computed: {
-        checkedNames() {
-            return this.names.filter(item => item.checked).map(name => name.name)
-        }
+        },findBestTank(){
+            this.error = null
+            AXIOS.post('/recommend/playstyle')
+            .then(response => {
+                    if (response.status == 200){
+                        localStorage.setItem('token', response.data.accessToken);
+                        this.items = response.data   
+                        console.log(response)    
+                    } 
+                })
+                .catch(err => {
+                    if (err.response.status == 400) {
+                        this.errorMessage = "Some error has occured!";
+                        this.error = true
+                    } 
+                })
+        },
     },
-    mounted() {
-        this.populateChecks();
-    }
+        mounted() {
+            this.populateChecks();
+        }
  }
 </script>
 
 
 <style scoped>
 
-h1{
+#mainh1{
     color: #ffffff; 
     font-family: 'Raleway',sans-serif;
     font-size: 62px;
@@ -93,12 +109,12 @@ div.bottomLinks {
 }
 
 #checksDiv{
-   position: fixed;
-    top: 60%;
+    position: fixed;
+    top: 20%;
     left: 20%;
     transform: translate(-50%, -50%);
     width: 30%;
-    height: 10%;
+    height: 15%;
     background-color: rgba(182, 181, 181, 0.918);
     display: table;
     transition: opacity .3s ease;
@@ -106,12 +122,52 @@ div.bottomLinks {
     border: 1px solid black;
     border-collapse:separate;
     opacity: 0.7;
+    
 }
 
 #checksInside{
     position: relative;
-    
+    display: inline-block;
     left: 0%;
 }
 
+#tankDiv{
+    position: fixed;
+    top:  1%;
+    left: 700px;
+    width: 900px;
+    height: 700px;
+    background-color: rgba(182, 181, 181, 0.918);
+    display: table;
+    transition: opacity .3s ease;
+    border-radius:20px;
+    border: 1px solid black;
+    border-collapse:separate;
+    opacity: 0.7;
+    
+}
+
+#buttonDiv{
+    position: fixed;
+    top:250px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    border-radius:5px;
+    border: 2px solid black;
+    border-collapse:separate;
+}
+
+#tankH1{
+    position: fixed;
+    top:  1%;
+    left: 950px;
+    display: table;
+    color: #ffffff; 
+    font-family: 'Raleway',sans-serif;
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 72px;
+    
+}
 </style>
