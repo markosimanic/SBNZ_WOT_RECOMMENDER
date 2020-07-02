@@ -1,9 +1,24 @@
 package rules;
 dialect  "mvel"
+import com.example.WoTRecommender.model.User;
+import com.example.WoTRecommender.model.TankType;
+import com.example.WoTRecommender.model.TankStatus;
+import com.example.WoTRecommender.model.Tank;
+import com.example.WoTRecommender.model.PlayerStatistics;
+import java.util.List;
 
-// buying history bi bili svi tenkovi koje korisnik ima
-// pronaci slicne karakteristike svih tenkova koje poseduje i ukoliko je moguce izgenerisati preporuceni tenk
-rule "Reccomend tank based on player buying history"
-    when
-    then
+rule "Recommend player to improve gameplay with tanks where avgDmg is under 1000"
+  when
+  $u : User($string : recommendationString)
+  $stats : List() from collect(PlayerStatistics());
+  Number(intValue >= 1) from accumulate(
+  $s : PlayerStatistics(
+         avgDamage < 1000
+  )from $stats,
+  count($s)
+  )
+  then
+    System.out.println("ASDADAD");
+    modify($u) {setRecommendationString("play better")}
 end
+

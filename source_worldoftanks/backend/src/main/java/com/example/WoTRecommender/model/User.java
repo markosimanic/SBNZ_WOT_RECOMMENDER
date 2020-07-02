@@ -26,6 +26,9 @@ public class User implements UserDetails {
 
     private Boolean discount;
 
+    @Column(name = "recommendation_string")
+    private String recommendationString;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "user_category")
     private UserCategory userCategory;
@@ -58,7 +61,8 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String username, String password, Integer balance, Integer paidmoney, Boolean discount, UserCategory userCategory, List<UserTank> tanks) {
+    public User(Long id, String username, String password, Integer balance, Integer paidmoney, Boolean discount,
+                String recommendationString, UserCategory userCategory, List<UserTank> tanks) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -66,6 +70,7 @@ public class User implements UserDetails {
         this.userCategory = userCategory;
         this.paidmoney = paidmoney;
         this.discount = discount;
+        this.recommendationString = recommendationString;
         this.tanks = tanks;
     }
 
@@ -133,6 +138,14 @@ public class User implements UserDetails {
         Timestamp now = new Timestamp(DateTime.now().getMillis());
         this.setLastPasswordResetDate( now );
         this.password = password;
+    }
+
+    public String getRecommendationString() {
+        return recommendationString;
+    }
+
+    public void setRecommendationString(String reccomendationString) {
+        this.recommendationString = reccomendationString;
     }
 
     public Integer getBalance() {

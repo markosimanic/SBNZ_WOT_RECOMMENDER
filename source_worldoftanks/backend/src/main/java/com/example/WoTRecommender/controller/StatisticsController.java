@@ -5,6 +5,7 @@ import com.example.WoTRecommender.model.PlayerStatistics;
 import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.repository.StatisticsRepository;
 import com.example.WoTRecommender.repository.UserRepository;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,9 @@ public class StatisticsController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private KieSession session;
+
     @GetMapping(path="/current")
     public List<PlayerStatistics> getStatsOfCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,13 +40,20 @@ public class StatisticsController {
         User currentUser = userRepository.findByUsername(currentPrincipalName);
         Long id = currentUser.getId();
 
+        session.insert(currentUser);
+
         List<PlayerStatistics> pstats = statisticsRepository.findAll();
         List<PlayerStatistics> statistics_of_current_user = new ArrayList<>();
         for (PlayerStatistics ps : pstats) {
             if(id.equals(ps.getUserTank().getId().getUserID())){
-                statistics_of_current_user.add(ps);
+                //statistics_of_current_user.add(ps);
+                session.insert(ps);
             }
         }
+        session.fireAllRules();
+
+        userRepository.save(currentUser);
+
         return statistics_of_current_user;
     }
 }

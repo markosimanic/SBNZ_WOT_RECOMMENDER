@@ -1,13 +1,43 @@
 package rules;
 dialect  "mvel"
 
+import com.example.WoTRecommender.model.PlayerStatistics;
+import com.example.WoTRecommender.model.Tank;
+import java.util.List;
 
-rule "Find tank that user plays best"
+declare Stats
+    statistics: PlayerStatistics
+    winRate: int
+    tank : Tank
+end
+
+declare bestStats
+    statistics: Stats
+end
+
+rule "New statistics added"
     when
+        $ps : PlayerStatistics($wr: winRate, $t : userTank.getTank());
+        not Stats($ps.getId() == statistics.getId())
     then
+        insert(new Stats($ps, $ps.getWinRate(), $t));
+end
+
+rule "Get stats with most WR"
+    when
+        $allStats : List($allStats.size>0) from collect(Stats());
+        $stats: Stats() from $allStats;
+        not Stats(winRate > $stats.getWinRate()) from $allStats;
+    then
+        insert(new bestStats($stats))
+        System.out.println($stats.getWinRate());
 end
 
 rule "Reccomend tank with most similarities with tank that user plays best"
     when
+        $bestTank : bestStats($t : statistics.getTank())
     then
+        System.out.println($bestTank.statistics.getTank().getName());
 end
+
+

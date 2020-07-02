@@ -3,8 +3,8 @@ import com.example.WoTRecommender.model.Tank;
 import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.model.Characteristics;
 
-rule "Recommend tanks based on characteristics chosen by user"
-	salience ((100*$value) / $characteristics.size())
+rule "Recommend tank based on characteristics chosen by user"
+    salience ($characteristics.size()/$value)
     when
         $t: Tank($name: name, $characteristics: characteristics)
         $u: User($user_characteristics: user_characteristics) // user characteristics pick
@@ -15,6 +15,7 @@ rule "Recommend tanks based on characteristics chosen by user"
     then
     	System.out.println("Tank that might be good for you: " + $name);
     	System.out.println("Number of tank characteristics that match your choice: " + $value + "/" + $characteristics.size());
+    	System.out.println("Final tank:" + $t);
     	modify($u) { setCurrentTank($t) }
 end
 

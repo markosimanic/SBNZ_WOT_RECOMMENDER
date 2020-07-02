@@ -1,10 +1,9 @@
 -- password hashed by BCrypt algorithm https://www.dailycred.com/article/bcrypt-calculator
 -- password  123
 
-INSERT INTO USER (id, username, password, balance, discount,paidmoney,user_category, enabled) VALUES (1, 'user1','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',10000,false,1000,'NA', true);
+INSERT INTO USER (id, username, password, balance, discount,recommendation_string,paidmoney,user_category, enabled) VALUES (1, 'user1','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',10000,false,'no_recommendation',1000,'NA', true);
 INSERT INTO AUTHORITY (id, name) VALUES (1, 'ROLE_USER');
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 1);
-
 
 INSERT INTO CHARACTERISTICS (id, name) VALUES (1, 'LOW_DAMAGE');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (2, 'GREAT_DAMAGE');
@@ -29,6 +28,8 @@ INSERT INTO CHARACTERISTICS (id, name) VALUES (20, 'NO_CUPOLA');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (21, 'SMALL_SIZED_TANK');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (22, 'NORMAL_SIZED_TANK');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (23, 'HUGE_SIZED_TANK');
+INSERT INTO CHARACTERISTICS (id, name) VALUES (24, 'MEDIUM_PEN');
+INSERT INTO CHARACTERISTICS (id, name) VALUES (25, 'MEDIUM_DAMAGE');
 
 --all tanks in system
 INSERT INTO TANK (id, name, price,tank_status, tank_type) VALUES (1, 'Skropion G',4500,'PREMIUM' ,'DESTROYER');
@@ -54,15 +55,33 @@ INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 6);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 9);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 13);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 14);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 21);
+
+--characteristics for maus
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 2);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 3);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 7);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 8);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 10);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 12);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 23);
 
 --characteristics of progetto
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 12);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 1);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 11);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 25);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 24);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 6);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 9);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 13);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 16);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 22);
+
 
 -- what user want -> he wants tank that have low armor
-INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 13);
+INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 25); -- medium damage
+INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 24); -- medium pen
+INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 16); -- autoloader
+INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 9); -- fast tank
+
 
 -- tanks that user1 have
 INSERT INTO USER_TANK(user_id,tank_id) VALUES (1,1);
@@ -72,6 +91,6 @@ INSERT INTO USER_TANK(user_id,tank_id) VALUES (1,3);
 
 -- statistics of user 1
 INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (1,2300,70,True,1,1);
-INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (2,4300,67,True,2,1);
+INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (2,4300,100,True,2,1);
 INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (3,900,47,True,2,1);
 INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (4,1250,51,True,3,1);
