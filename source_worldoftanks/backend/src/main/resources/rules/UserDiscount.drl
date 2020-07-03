@@ -25,7 +25,6 @@ agenda-group "discount_by_category"
        	modify($u) { setBalance($bl+50) , setDiscount(true) }
 end
 
-
 rule "Give 20% discount to user if he bought more than 2 PREMIUM tanks"
   when $u : User($ownedTanks : tanks, $b:balance)
   $tanks : List() from collect(Tank());

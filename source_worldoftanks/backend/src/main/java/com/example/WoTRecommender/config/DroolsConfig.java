@@ -15,6 +15,7 @@ public class DroolsConfig {
     private KieServices kieServices = KieServices.Factory.get();
 
     private KieFileSystem getKieFileSystem() throws IOException {
+
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         kieFileSystem.write(ResourceFactory.newClassPathResource("rules/MatchHistoryRecommend.drl"));
         return kieFileSystem;

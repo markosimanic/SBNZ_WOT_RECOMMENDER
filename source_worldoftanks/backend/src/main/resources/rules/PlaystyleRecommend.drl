@@ -2,6 +2,7 @@ package rules;
 import com.example.WoTRecommender.model.Tank;
 import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.model.Characteristics;
+import java.util.List;
 
 rule "Recommend tank based on characteristics chosen by user"
     salience ($characteristics.size()/$value)
@@ -18,4 +19,5 @@ rule "Recommend tank based on characteristics chosen by user"
     	System.out.println("Final tank:" + $t);
     	modify($u) { setCurrentTank($t) }
 end
+
 

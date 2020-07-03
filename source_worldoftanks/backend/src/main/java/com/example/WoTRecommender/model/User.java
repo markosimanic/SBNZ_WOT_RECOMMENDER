@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @OneToOne()
     private Tank currentTank;
 
+    @OneToOne()
+    private Tank bestStatsTank;
+
     @Column(name = "enabled")
     private boolean enabled;
 
@@ -72,6 +75,14 @@ public class User implements UserDetails {
         this.discount = discount;
         this.recommendationString = recommendationString;
         this.tanks = tanks;
+    }
+
+    public Tank getBestStatsTank() {
+        return bestStatsTank;
+    }
+
+    public void setBestStatsTank(Tank bestStatsTank) {
+        this.bestStatsTank = bestStatsTank;
     }
 
     public Long getId() {

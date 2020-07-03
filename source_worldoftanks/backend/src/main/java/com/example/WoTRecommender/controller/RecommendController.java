@@ -1,5 +1,6 @@
 package com.example.WoTRecommender.controller;
 
+import com.example.WoTRecommender.model.Characteristics;
 import com.example.WoTRecommender.model.Tank;
 import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.repository.TankRepository;
@@ -26,20 +27,23 @@ public class RecommendController {
     UserRepository userRepository;
 
     @PostMapping(path = "/playstyle")
-    public User recommendTankPlaystyle(){
+    public User recommendTankPlaystyle(@RequestBody List<Characteristics> chars){
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         User user  = userRepository.findByUsername(currentPrincipalName);
+        user.setUser_characteristics(chars);
+        userRepository.save(user);
         session.insert(user);
-        System.out.println(user.getUsername());
 
         List<Tank> tanks = tankRepository.findAll();
         for (Tank tank: tanks) {
             session.insert(tank);
-
         }
         session.fireAllRules();
+
         return user;
+
     }
 
 }

@@ -7,18 +7,17 @@ import com.example.WoTRecommender.model.Tank;
 import com.example.WoTRecommender.model.PlayerStatistics;
 import java.util.List;
 
-rule "Recommend player to improve gameplay with tanks where avgDmg is under 1000"
-  when
-  $u : User($string : recommendationString)
-  $stats : List() from collect(PlayerStatistics());
-  Number(intValue >= 1) from accumulate(
-  $s : PlayerStatistics(
-         avgDamage < 1000
-  )from $stats,
-  count($s)
-  )
-  then
-    System.out.println("ASDADAD");
-    modify($u) {setRecommendationString("play better")}
-end
+//rule "Recommend player to improve gameplay with tanks where avgDmg is under 1000"
+//  when
+//  $u : User($string : recommendationString)
+//  $stats : List() from collect(PlayerStatistics());
+//  Number(intValue >= 1) from accumulate(
+//  $s : PlayerStatistics(
+//         avgDamage < 1000
+//  )from $stats,
+//  count($s)
+//  )
+//  then
+//    modify($u) {setRecommendationString("You have tank with average damage lower than 1000, try to play it better!")}
+//end
 

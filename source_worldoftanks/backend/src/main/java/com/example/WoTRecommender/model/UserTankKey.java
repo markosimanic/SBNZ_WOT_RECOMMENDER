@@ -2,10 +2,15 @@ package com.example.WoTRecommender.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Embeddable
 public class UserTankKey implements Serializable {
+
+//    @Id
+//    @Column(name = "id")
+//    Long id;
 
     @Column(name = "user_id")
     Long userID;

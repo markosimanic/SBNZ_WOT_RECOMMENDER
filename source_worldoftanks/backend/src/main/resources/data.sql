@@ -77,10 +77,10 @@ INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 22);
 
 
 -- what user want -> he wants tank that have low armor
-INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 25); -- medium damage
-INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 24); -- medium pen
-INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 16); -- autoloader
-INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 9); -- fast tank
+-- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 25); -- medium damage
+-- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 24); -- medium pen
+-- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 16); -- autoloader
+-- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 9); -- fast tank
 
 
 -- tanks that user1 have
