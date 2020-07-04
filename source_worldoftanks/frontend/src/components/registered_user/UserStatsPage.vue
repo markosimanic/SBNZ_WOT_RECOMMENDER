@@ -1,17 +1,28 @@
 <template>
      <div id="tanksPage">
+    <!-- <b-table id="table" striped hover :items="items" :fields="fields"></b-table> -->
     <table id="table">
       <thead>
           <tr>
-              <th v-for="(column, index) in columns" :key="index"> {{column}}</th>
+            <th>Tank</th>
+            <th>Average damage</th>
+            <th>Win rate</th>
+            <th>Gun mark</th>
           </tr>
       </thead>
       <tbody>
-          <tr v-for="(item, index) in items" :key="index">
-              <td v-for="(column, indexColumn) in columns" :key="indexColumn">{{item[column]}}</td>
+          <tr v-for="item in items" :key="item.name">
+              <td>{{item.userTank.tank.name}}</td>
+              <td>{{item.avgDamage}}</td>
+              <td>{{item.winRate}}</td>
+              <td>{{item.gunMark}}</td>
           </tr>
       </tbody>
     </table>
+    <div id="bestTankDiv">
+        <h1>Tank you play best is {{userBestWRTank.name}}, it seems like you play {{userBestWRTank.tankType}}S good </h1>
+        <p>{{recommendationString}}</p>
+    </div>    
     </div>
 </template>
 
@@ -22,9 +33,16 @@ import { AXIOS } from '../../http-commons'
     name : "AllTanksPage",
     data() {
       return {
-        columns : ["avgDamage", "winRate","gunMark"],
+         fields : [
+            { key: 'userTank', label: 'Tank' },
+            { key: 'avgDamage', label: 'Average damage' },
+            { key: 'winRate', label: 'Win rate' },
+            { key: 'gunMark', label: 'Gun mark' },
+          ],
         items : [],
-        error: null
+        error: null,
+        userBestWRTank : '',
+        recommendationString : ''
     }
     }, methods : {
         getStats(){
@@ -33,9 +51,7 @@ import { AXIOS } from '../../http-commons'
             AXIOS.get('/statistics/current')
             .then(response => {
                     if (response.status == 200){
-                        localStorage.setItem('token', response.data.accessToken);
                         this.items = response.data
-                         console.log(this.items)
                     } 
                 })
                 .catch(err => {
@@ -45,13 +61,86 @@ import { AXIOS } from '../../http-commons'
                         console.log(this.error)
                     } 
                 })
-        }
+        }, getUser(){
+            this.error = null
+            AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+            AXIOS.get('/users/getUser')
+            .then(response => {
+                    if (response.status == 200){
+                        this.userBestWRTank = response.data.bestStatsTank
+                        this.recommendationString = response.data.recommendationString
+                        console.log(this.recommendationString)
+                    } 
+                })
+                .catch(err => {
+                    if (err.response.status == 400) {
+                        this.errorMessage = "Some error has occured!";
+                        this.error = true
+                        console.log(this.error)
+                    } 
+                })
+        },
     } , mounted(){
          this.getStats()
+         this.getUser()
      }
  }
 </script>
 
-<style lang="stylus" scoped>
+
+
+<style scoped>
+
+ #table{
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 30%;
+    background-color: rgba(182, 181, 181, 0.918);
+    display: table;
+    transition: opacity .3s ease;
+     border-radius:20px;
+    border: 1px solid black;
+    border-collapse:separate;
+ }
+
+  th, td{
+     border-left:solid black 1px;
+    border-top:solid black 1px;
+ }
+
+ th {
+    border-top: none;
+}
+
+td:first-child, th:first-child {
+     border-left: none;
+}
+
+#bestTankDiv{
+    position: fixed;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+h1{
+     color: #ffffff; 
+    font-family: 'Raleway',sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 72px;
+    margin: 0 0 24px; 
+     display: inline-block;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-transform: uppercase; 
+    text-shadow: #6C6B6B;
+}
 
 </style>

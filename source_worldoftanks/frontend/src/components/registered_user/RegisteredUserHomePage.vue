@@ -10,8 +10,8 @@
             <b-card header-tag="header"  border-variant="secondary" style="max-width: 50rem;" class="mb-2 mx-auto"  body-bg-variant="secondary">
               <div class="btn-group">
                 <b-button v-on:click="redirect_playstyle()">RECOMMENDATION BASED ON YOUR PLAYSTYLE</b-button>
-                <b-button v-on:click="redirect_good_at()">RECOMMENDATION BASED ON TANKS YOU ARE GOOD AT</b-button>
-                <b-button v-on:click="redirect_owned()">RECOMMENDATION BASED ON YOUR BUYING HISTORY</b-button>
+                <b-button v-on:click="redirect_good_at()">WHAT IS BEST TANK TYPE FOR YOU?</b-button>
+                <b-button v-on:click="redirect_owned()">RECOMMENDATION BASED ON YOUR BOUGHT TANKS</b-button>
               </div>
             </b-card>
         
