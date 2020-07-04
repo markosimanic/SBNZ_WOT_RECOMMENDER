@@ -1,7 +1,7 @@
 -- password hashed by BCrypt algorithm https://www.dailycred.com/article/bcrypt-calculator
 -- password  123
 
-INSERT INTO USER (id, username, password, balance, discount,recommendation_string,paidmoney,user_category, enabled) VALUES (1, 'user1','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',10000,false,'no_recommendation',1000,'NA', true);
+INSERT INTO USER (id, username, password, balance, discount,recommendation_string,paidmoney,user_category, enabled) VALUES (1, 'user1','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',100000,false,'no_recommendation',90,'NA', true);
 INSERT INTO AUTHORITY (id, name) VALUES (1, 'ROLE_USER');
 INSERT INTO USER_AUTHORITY (user_id, authority_id) VALUES (1, 1);
 
@@ -85,12 +85,18 @@ INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 22);
 
 -- tanks that user1 have
 INSERT INTO USER_TANK(user_id,tank_id) VALUES (1,1);
-INSERT INTO USER_TANK(user_id,tank_id) VALUES (1,2);
+
+--comment it to test discounting
+--INSERT INTO USER_TANK(user_id,tank_id) VALUES (1,2);
+
 INSERT INTO USER_TANK(user_id,tank_id) VALUES (1,3);
 
 
 -- statistics of user 1
 INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (1,2300,70,True,1,1);
-INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (2,4300,100,True,2,1);
-INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (3,900,47,True,2,1);
+
+--comment 2 rows below to test discounting
+--INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (2,4300,100,True,2,1);
+--INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (3,900,47,True,2,1);
+
 INSERT INTO PLAYER_STATISTICS(id,avg_damage,win_rate,gun_mark,user_tank_tank_id,user_tank_user_id) VALUES (4,1250,51,True,3,1);

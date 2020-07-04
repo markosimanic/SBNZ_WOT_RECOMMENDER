@@ -4,16 +4,21 @@ import com.example.WoTRecommender.model.Tank;
 import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.model.UserTank;
 import com.example.WoTRecommender.model.UserTankKey;
+import com.example.WoTRecommender.repository.TankRepository;
 import com.example.WoTRecommender.repository.UserRepository;
 //import com.example.WoTRecommender.repository.UserTankKeyRepository;
+import com.example.WoTRecommender.repository.UserTankRepository;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/discounts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,6 +31,12 @@ public class DiscountingController {
 //    UserTankKeyRepository userTankKeyRepository;
 
     @Autowired
+    TankRepository tankRepository;
+
+    @Autowired
+    UserTankRepository userTankRepository;
+
+    @Autowired
     private KieSession session;
 
     @GetMapping(path = "/getAllUsers")
@@ -33,11 +44,61 @@ public class DiscountingController {
         return userRepository.findAll();
     }
 
+//    @PostMapping(path ="/buyTank")
+//    public User buyTank(@RequestBody Tank tank){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String currentPrincipalName = authentication.getName();
+//        User u = userRepository.findByUsername(currentPrincipalName);
+//
+//        Integer userBalance = u.getBalance();
+//        Integer tankPrice = tank.getPrice();
+//        List<UserTank> userTanks = u.getTanks();
+//
+//        UserTank boughtTank = new UserTank();
+//        UserTankKey utk = new UserTankKey();
+//        utk.setTankID(tank.getId());
+//        utk.setUserID(u.getId());
+//       // userTankKeyRepository.save(utk);
+//
+//        boughtTank.setId(utk);
+//        boughtTank.setUser(u);
+//        boughtTank.setTank(tank);
+//
+//        boolean alreadyOwned = false;
+//        for (UserTank ut: userTanks) {
+//                if (ut.getTank().getName().equals(tank.getName())) {
+//                    alreadyOwned = true;
+//                break;
+//            }
+//        }
+//        if(!alreadyOwned){
+//            if (tankPrice<=userBalance)
+//            {
+//                u.setBalance(userBalance-tankPrice);
+//                u.setPaidmoney(u.getPaidmoney() + tankPrice);
+//                userTanks.add(boughtTank);
+//                u.setTanks(userTanks);
+//                System.out.println(userTanks);
+//                userRepository.save(u);
+//            }
+//        }
+//        session.insert(u);
+//        session.getAgenda().getAgendaGroup( "discounting" ).setFocus();
+//        session.fireAllRules();
+//
+//        return u;
+//    }
+
     @PostMapping(path ="/buyTank")
-    public User buyTank(@RequestBody Tank tank){
+    public ResponseEntity<User> buyTank(@RequestParam Long tankId){
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         User u = userRepository.findByUsername(currentPrincipalName);
+
+        Optional<Tank> chosenTank = tankRepository.findById(tankId);
+
+        Tank tank = chosenTank.get();
 
         Integer userBalance = u.getBalance();
         Integer tankPrice = tank.getPrice();
@@ -47,7 +108,7 @@ public class DiscountingController {
         UserTankKey utk = new UserTankKey();
         utk.setTankID(tank.getId());
         utk.setUserID(u.getId());
-       // userTankKeyRepository.save(utk);
+        // userTankKeyRepository.save(utk);
 
         boughtTank.setId(utk);
         boughtTank.setUser(u);
@@ -55,25 +116,34 @@ public class DiscountingController {
 
         boolean alreadyOwned = false;
         for (UserTank ut: userTanks) {
-                if (ut.getTank().getName().equals(tank.getName())) {
-                    alreadyOwned = true;
-                break;
+            if (ut.getTank().getName().equals(tank.getName())) {
+                alreadyOwned = true;
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
         if(!alreadyOwned){
             if (tankPrice<=userBalance)
             {
+                userTankRepository.save(boughtTank);
                 u.setBalance(userBalance-tankPrice);
+                u.setPaidmoney(u.getPaidmoney() + tankPrice);
                 userTanks.add(boughtTank);
                 u.setTanks(userTanks);
                 System.out.println(userTanks);
                 userRepository.save(u);
+
+
+            }else{
+               return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        return u;
+        session.insert(u);
+        session.fireAllRules();
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(path ="/setDiscount")
+    @GetMapping(path ="/setDiscount")
     public User setUserDiscount(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();

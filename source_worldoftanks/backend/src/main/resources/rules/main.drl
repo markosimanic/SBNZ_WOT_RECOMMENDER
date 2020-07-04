@@ -1,0 +1,115 @@
+package rules;
+dialect  "mvel"
+
+import com.example.WoTRecommender.model.User;
+import com.example.WoTRecommender.model.UserCategory;
+import com.example.WoTRecommender.model.Characteristics;
+import com.example.WoTRecommender.model.PlayerStatistics;
+import com.example.WoTRecommender.model.TankType;
+import com.example.WoTRecommender.model.TankStatus;
+import com.example.WoTRecommender.model.Tank;
+import java.util.List;
+
+
+//------------------------------------------MATCH HISTORY RULES---------------------------------
+declare Stats
+    statistics: PlayerStatistics
+    winRate: int
+    tank : Tank
+end
+
+declare bestStats
+    statistics: Stats
+end
+
+rule "Insert new statistics"
+    no-loop
+    when
+        $ps : PlayerStatistics($wr: winRate, $t : userTank.getTank());
+        not Stats($ps.getId() == statistics.getId())
+    then
+        insert(new Stats($ps, $ps.getWinRate(), $t));
+end
+
+rule "Get stats with most WR"
+    when
+        $u: User()
+        $allStats : List($allStats.size>0) from collect(Stats());
+        $stats: Stats() from $allStats;
+        not Stats(winRate > $stats.getWinRate()) from $allStats;
+    then
+        modify($u){ setBestStatsTank($stats.getTank())}
+        System.out.println($u.getBestStatsTank().getName());
+
+end
+
+rule "Recommend player to improve gameplay with tanks where avgDmg is under 1000"
+  when
+  $u : User($string : recommendationString)
+  $stats : List() from collect(PlayerStatistics());
+  Number(intValue >= 1) from accumulate(
+  $s : PlayerStatistics(
+         avgDamage < 1000
+  )from $stats,
+  count($s)
+  )
+  then
+    modify($u) {setRecommendationString("You have 5 tanks with average damage lower than 1000, try to play them better!")}
+end
+
+
+//---------------------------------------------------------------------------------------------
+//--------------------------------------DISCOUNTING RULES--------------------------------------
+
+//chaining
+rule "If user bougth thanks in value more than 100$, set user category to gold"
+    when
+        $u: User(userCategory == UserCategory.NA, discount==false, paidmoney>=100)
+    then
+    	modify($u) {setUserCategory(UserCategory.GOLD)}
+end
+
+rule "If user have GOLD category, add 50$ to his account balance but only once"
+    no-loop
+    when
+        $u: User(userCategory == UserCategory.GOLD, paidmoney>=100,$bl : balance)
+    then
+        System.out.println("Gold user got his balance buffed");
+       	modify($u) {setBalance($bl+50) }
+end
+
+rule "Give 20% discount to user if he bought more than 2 PREMIUM tanks"
+  when $u : User($ownedTanks : tanks, $b:balance)
+  $tanks : List() from collect(Tank());
+  Number(intValue >= 2) from accumulate(
+  $t : Tank(tankStatus == TankStatus.PREMIUM)
+  from $tanks,
+  count($t)
+  )
+  then
+    System.out.println("added discount");
+    modify($u) {setBalance($b+50) , setDiscount(true) }
+end
+
+//-----------------------------------------------------------------------------------------------
+
+//--------------------------------------USER CHARACTERISTICS PICK RULES--------------------------------------
+
+rule "Recommend tank based on characteristics chosen by user"
+    salience ($characteristics.size()/$value)
+    no-loop
+    when
+        $t: Tank($name: name, $characteristics: characteristics)
+        $u: User($user_characteristics: user_characteristics) // user characteristics pick
+        Number($value: intValue >= 1) from accumulate(
+        	Characteristics($c:this, this memberOf $characteristics) from $user_characteristics,
+        	count($c)
+        )
+    then
+    	System.out.println("Tank that might be good for you: " + $name);
+    	System.out.println("Number of tank characteristics that match your choice: " + $value + "/" + $characteristics.size());
+    	System.out.println("Final tank:" + $t);
+    	modify($u) { setCurrentTank($t) }
+end
+
+//-----------------------------------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ rule "Recommend player to improve gameplay with tanks where avgDmg is under 1000
   count($s)
   )
   then
-    modify($u) {setRecommendationString("You have 5 tanks with average damage lower than 1000, try to play them better!")}
+    modify($u) {setRecommendationString("You have tanks with average damage lower than 1000, try to play them better!")}
 end
 
 //rule "Reccomend tank with most similarities with tank that user plays best"

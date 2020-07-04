@@ -9,7 +9,7 @@ import java.util.List;
 
 //chaining rules for setting discount
 rule "If user bougth thanks in value more than 100$, set user category to gold"
-agenda-group "discount_by_category"
+
     when
         $u: User(userCategory == UserCategory.NA, discount==false, paidmoney>=100)
     then
@@ -17,18 +17,19 @@ agenda-group "discount_by_category"
 end
 
 rule "If user have GOLD category, add 50$ to his account balance but only once"
-agenda-group "discount_by_category"
+
     no-loop
     when
         $u: User(userCategory == UserCategory.GOLD, paidmoney>=100,$bl : balance)
     then
-       	modify($u) { setBalance($bl+50) , setDiscount(true) }
+        System.out.println("Gold user got his balance buffed");
+       	modify($u) { setBalance($bl+50)}
 end
 
 rule "Give 20% discount to user if he bought more than 2 PREMIUM tanks"
   when $u : User($ownedTanks : tanks, $b:balance)
   $tanks : List() from collect(Tank());
-  Number(intValue >= 2) from accumulate(
+  Number(intValue > 1) from accumulate(
   $t : Tank(
     tankStatus == TankStatus.PREMIUM
   )from $tanks,
