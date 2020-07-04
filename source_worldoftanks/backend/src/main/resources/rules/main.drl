@@ -57,7 +57,7 @@ agenda-group "statistics"
   count($s)
   )
   then
-    modify($u) {setRecommendationString("You tanks with average damage lower than 3000, try to play them better!")}
+    modify($u) {setRecommendationString("INFO: We noticed that you have tanks with average damage lower than 3000, try to improve your gameplay!")}
     System.out.println("Agenda group 'STATISTICS' : Recommendation string modified");
 end
 
