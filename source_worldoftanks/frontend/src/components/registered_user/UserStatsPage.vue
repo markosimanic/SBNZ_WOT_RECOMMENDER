@@ -20,8 +20,8 @@
       </tbody>
     </table>
     <div id="bestTankDiv">
-        <h1>Tank you play best is {{userBestWRTank.name}}, it seems like you play {{userBestWRTank.tankType}}S good </h1>
-        <p>{{recommendationString}}</p>
+        <h1 id="recommendType">You are winning most battles with {{userBestWRTank.name}}, Recommendation: play {{userBestWRTank.tankType}} tanks.</h1>
+        <p id="recStringDiv">{{recommendationString}}</p>
     </div>    
     </div>
 </template>
@@ -87,8 +87,6 @@ import { AXIOS } from '../../http-commons'
  }
 </script>
 
-
-
 <style scoped>
 
  #table{
@@ -121,10 +119,19 @@ td:first-child, th:first-child {
 
 #bestTankDiv{
     position: fixed;
-    top: 80%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
 
+#recommendType{
+     text-shadow: #6C6B6B;
+    display: inline-block;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#recStringDiv{
+ background-color: rgba(182, 181, 181, 0.918);
 }
 
 h1{
