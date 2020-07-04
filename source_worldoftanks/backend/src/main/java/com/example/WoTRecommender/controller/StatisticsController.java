@@ -7,6 +7,7 @@ import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.repository.StatisticsRepository;
 import com.example.WoTRecommender.repository.TankRepository;
 import com.example.WoTRecommender.repository.UserRepository;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,21 +36,23 @@ public class StatisticsController {
     TankRepository tankRepository;
 
     @Autowired
-    private KieSession session;
+    private KieContainer kieContainer;
 
     @GetMapping(path="/current")
     public List<PlayerStatistics> getStatsOfCurrentUser(){
+
+        KieSession kieSession = kieContainer.newKieSession();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
         User currentUser = userRepository.findByUsername(currentPrincipalName);
         Long id = currentUser.getId();
-        session.insert(currentUser);
+        kieSession.insert(currentUser);
 
         List<Tank> allTanksInSystem = tankRepository.findAll();
         for (Tank t:allTanksInSystem) {
-            session.insert(t);
+            kieSession.insert(t);
         }
 
         List<PlayerStatistics> pstats = statisticsRepository.findAll();
@@ -57,10 +60,14 @@ public class StatisticsController {
         for (PlayerStatistics ps : pstats) {
             if(id.equals(ps.getUserTank().getId().getUserID())){
                 statistics_of_current_user.add(ps);
-                session.insert(ps);
+                kieSession.insert(ps);
             }
         }
-        session.fireAllRules();
+
+        kieSession.getAgenda().getAgendaGroup("statistics").setFocus();
+        kieSession.fireAllRules();
+
+        kieSession.dispose();
 
         userRepository.save(currentUser);
 

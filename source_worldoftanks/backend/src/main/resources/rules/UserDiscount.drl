@@ -4,12 +4,12 @@ import com.example.WoTRecommender.model.User;
 import com.example.WoTRecommender.model.UserCategory;
 import com.example.WoTRecommender.model.TankType;
 import com.example.WoTRecommender.model.TankStatus;
-import com.example.WoTRecommender.model.Tank;
+import com.example.WoTRecommender.model.UserTank;
 import java.util.List;
 
 //chaining rules for setting discount
 rule "If user bougth thanks in value more than 100$, set user category to gold"
-
+    agenda-group "discounts"
     when
         $u: User(userCategory == UserCategory.NA, discount==false, paidmoney>=100)
     then
@@ -17,7 +17,7 @@ rule "If user bougth thanks in value more than 100$, set user category to gold"
 end
 
 rule "If user have GOLD category, add 50$ to his account balance but only once"
-
+    agenda-group "discounts"
     no-loop
     when
         $u: User(userCategory == UserCategory.GOLD, paidmoney>=100,$bl : balance)
@@ -27,11 +27,12 @@ rule "If user have GOLD category, add 50$ to his account balance but only once"
 end
 
 rule "Give 20% discount to user if he bought more than 2 PREMIUM tanks"
+
   when $u : User($ownedTanks : tanks, $b:balance)
-  $tanks : List() from collect(Tank());
+  $tanks : List() from collect(UserTank());
   Number(intValue > 1) from accumulate(
-  $t : Tank(
-    tankStatus == TankStatus.PREMIUM
+  $t : UserTank(
+    tank.getTankStatus() == TankStatus.PREMIUM
   )from $tanks,
   count($t)
   )

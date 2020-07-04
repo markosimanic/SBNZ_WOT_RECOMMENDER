@@ -7,9 +7,9 @@ import com.example.WoTRecommender.model.Characteristics;
 import com.example.WoTRecommender.model.PlayerStatistics;
 import com.example.WoTRecommender.model.TankType;
 import com.example.WoTRecommender.model.TankStatus;
+import com.example.WoTRecommender.model.UserTank;
 import com.example.WoTRecommender.model.Tank;
 import java.util.List;
-
 
 //------------------------------------------MATCH HISTORY RULES---------------------------------
 declare Stats
@@ -23,15 +23,18 @@ declare bestStats
 end
 
 rule "Insert new statistics"
+agenda-group "statistics"
     no-loop
     when
         $ps : PlayerStatistics($wr: winRate, $t : userTank.getTank());
         not Stats($ps.getId() == statistics.getId())
     then
         insert(new Stats($ps, $ps.getWinRate(), $t));
+        System.out.println("Agenda group 'STATISTICS' : Statistics inserted");
 end
 
 rule "Get stats with most WR"
+agenda-group "statistics"
     when
         $u: User()
         $allStats : List($allStats.size>0) from collect(Stats());
@@ -39,22 +42,23 @@ rule "Get stats with most WR"
         not Stats(winRate > $stats.getWinRate()) from $allStats;
     then
         modify($u){ setBestStatsTank($stats.getTank())}
-        System.out.println($u.getBestStatsTank().getName());
-
+        System.out.println("Agenda group 'STATISTICS' : Found user's best tank:" + $u.getBestStatsTank().getName());
 end
 
-rule "Recommend player to improve gameplay with tanks where avgDmg is under 1000"
+rule "Recommend player to improve gameplay with tanks where avgDmg is under 3000"
+agenda-group "statistics"
   when
   $u : User($string : recommendationString)
   $stats : List() from collect(PlayerStatistics());
   Number(intValue >= 1) from accumulate(
   $s : PlayerStatistics(
-         avgDamage < 1000
+         avgDamage < 3000
   )from $stats,
   count($s)
   )
   then
-    modify($u) {setRecommendationString("You have 5 tanks with average damage lower than 1000, try to play them better!")}
+    modify($u) {setRecommendationString("You tanks with average damage lower than 3000, try to play them better!")}
+    System.out.println("Agenda group 'STATISTICS' : Recommendation string modified");
 end
 
 
@@ -63,31 +67,39 @@ end
 
 //chaining
 rule "If user bougth thanks in value more than 100$, set user category to gold"
+agenda-group "discounts"
+salience 1000
+   lock-on-active
     when
         $u: User(userCategory == UserCategory.NA, discount==false, paidmoney>=100)
     then
     	modify($u) {setUserCategory(UserCategory.GOLD)}
+    	System.out.println("Agenda group 'DISCOUNTS' : User bought expensive tank, category set to GOLD ");
+
 end
 
-rule "If user have GOLD category, add 50$ to his account balance but only once"
-    no-loop
+rule "If user have GOLD category, add 50$ to his account balance"
+   agenda-group "discounts"
+   lock-on-active
     when
         $u: User(userCategory == UserCategory.GOLD, paidmoney>=100,$bl : balance)
     then
-        System.out.println("Gold user got his balance buffed");
+        System.out.println("Agenda group 'DISCOUNTS': Added 50$ to GOLD user balance");
        	modify($u) {setBalance($bl+50) }
 end
 
 rule "Give 20% discount to user if he bought more than 2 PREMIUM tanks"
+agenda-group "discounts"
+   lock-on-active
   when $u : User($ownedTanks : tanks, $b:balance)
-  $tanks : List() from collect(Tank());
+  $tanks : List() from collect(UserTank());
   Number(intValue >= 2) from accumulate(
-  $t : Tank(tankStatus == TankStatus.PREMIUM)
+  $t : UserTank(tank.tankStatus == TankStatus.PREMIUM)
   from $tanks,
   count($t)
   )
   then
-    System.out.println("added discount");
+    System.out.println("Agenda group 'DISCOUNTS': User bought more than 2 premium tanks, added 50$ to user balance");
     modify($u) {setBalance($b+50) , setDiscount(true) }
 end
 
@@ -96,6 +108,7 @@ end
 //--------------------------------------USER CHARACTERISTICS PICK RULES--------------------------------------
 
 rule "Recommend tank based on characteristics chosen by user"
+agenda-group "playstyle"
     salience ($characteristics.size()/$value)
     no-loop
     when
@@ -106,10 +119,10 @@ rule "Recommend tank based on characteristics chosen by user"
         	count($c)
         )
     then
-    	System.out.println("Tank that might be good for you: " + $name);
     	System.out.println("Number of tank characteristics that match your choice: " + $value + "/" + $characteristics.size());
     	System.out.println("Final tank:" + $t);
     	modify($u) { setCurrentTank($t) }
+    	System.out.println("Agenda group 'PLAYSTYLE': User got his tank recommendation based on chosen characteristics");
 end
 
 //-----------------------------------------------------------------------------------------------------------

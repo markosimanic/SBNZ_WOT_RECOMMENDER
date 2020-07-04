@@ -30,6 +30,9 @@ INSERT INTO CHARACTERISTICS (id, name) VALUES (22, 'NORMAL_SIZED_TANK');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (23, 'HUGE_SIZED_TANK');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (24, 'MEDIUM_PEN');
 INSERT INTO CHARACTERISTICS (id, name) VALUES (25, 'MEDIUM_DAMAGE');
+INSERT INTO CHARACTERISTICS (id, name) VALUES (26, 'STRONG_FRONTAL_ARMOR');
+INSERT INTO CHARACTERISTICS (id, name) VALUES (27, 'ANGLED_ARMOR');
+
 
 --all tanks in system
 INSERT INTO TANK (id, name, price,tank_status, tank_type) VALUES (1, 'Skropion G',4500,'PREMIUM' ,'DESTROYER');
@@ -57,15 +60,6 @@ INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 13);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 14);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (1, 21);
 
---characteristics for maus
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 2);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 3);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 7);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 8);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 10);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 12);
-INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 23);
-
 --characteristics of progetto
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 25);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 24);
@@ -76,11 +70,81 @@ INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 16);
 INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (2, 22);
 
 
--- what user want -> he wants tank that have low armor
--- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 25); -- medium damage
--- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 24); -- medium pen
--- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 16); -- autoloader
--- INSERT INTO user_characteristics (user_id, characteristics_id) VALUES (1, 9); -- fast tank
+--characteristics for maus
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 25);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 24);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 15);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 8);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 10);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 12);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (3, 23);
+
+
+--characteristics of ebr
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 17);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 25);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 24);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 9);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 16);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 7);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (4, 14);
+
+
+--characteristics of IS2-2
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 2);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 3);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 7);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 18);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 8);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 22);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (5, 10);
+
+--characteristics of T26E5 SUPERPERSHING
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 25);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 24);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 5);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 9);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 12);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 22);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (6, 26);
+
+--characteristics of ISU-152
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 2);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 3);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 7);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 20);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 22);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 26);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (7, 8);
+
+--characteristics of T-50-2
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 1);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 4);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 5);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 9);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 21);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 14);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (8, 11);
+
+
+--characteristics of Rhm
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 2);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 2);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 8);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 9);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 13);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 11);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (10, 20);
+
+
+--characteristics of OBJ252-u Defender
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 24);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 2);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 12);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 22);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 9);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 26);
+INSERT INTO tank_characteristics (tank_id, characteristics_id) VALUES (13, 27);
 
 
 -- tanks that user1 have

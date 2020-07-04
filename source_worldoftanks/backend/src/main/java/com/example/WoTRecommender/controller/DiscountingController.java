@@ -8,6 +8,7 @@ import com.example.WoTRecommender.repository.TankRepository;
 import com.example.WoTRecommender.repository.UserRepository;
 //import com.example.WoTRecommender.repository.UserTankKeyRepository;
 import com.example.WoTRecommender.repository.UserTankRepository;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,60 +38,17 @@ public class DiscountingController {
     UserTankRepository userTankRepository;
 
     @Autowired
-    private KieSession session;
+    private KieContainer kieContainer;
 
     @GetMapping(path = "/getAllUsers")
     public List<User> users(){
         return userRepository.findAll();
     }
 
-//    @PostMapping(path ="/buyTank")
-//    public User buyTank(@RequestBody Tank tank){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String currentPrincipalName = authentication.getName();
-//        User u = userRepository.findByUsername(currentPrincipalName);
-//
-//        Integer userBalance = u.getBalance();
-//        Integer tankPrice = tank.getPrice();
-//        List<UserTank> userTanks = u.getTanks();
-//
-//        UserTank boughtTank = new UserTank();
-//        UserTankKey utk = new UserTankKey();
-//        utk.setTankID(tank.getId());
-//        utk.setUserID(u.getId());
-//       // userTankKeyRepository.save(utk);
-//
-//        boughtTank.setId(utk);
-//        boughtTank.setUser(u);
-//        boughtTank.setTank(tank);
-//
-//        boolean alreadyOwned = false;
-//        for (UserTank ut: userTanks) {
-//                if (ut.getTank().getName().equals(tank.getName())) {
-//                    alreadyOwned = true;
-//                break;
-//            }
-//        }
-//        if(!alreadyOwned){
-//            if (tankPrice<=userBalance)
-//            {
-//                u.setBalance(userBalance-tankPrice);
-//                u.setPaidmoney(u.getPaidmoney() + tankPrice);
-//                userTanks.add(boughtTank);
-//                u.setTanks(userTanks);
-//                System.out.println(userTanks);
-//                userRepository.save(u);
-//            }
-//        }
-//        session.insert(u);
-//        session.getAgenda().getAgendaGroup( "discounting" ).setFocus();
-//        session.fireAllRules();
-//
-//        return u;
-//    }
-
     @PostMapping(path ="/buyTank")
     public ResponseEntity<User> buyTank(@RequestParam Long tankId){
+
+        KieSession kieSession = kieContainer.newKieSession();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
@@ -121,6 +79,7 @@ public class DiscountingController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
+
         if(!alreadyOwned){
             if (tankPrice<=userBalance)
             {
@@ -129,27 +88,37 @@ public class DiscountingController {
                 u.setPaidmoney(u.getPaidmoney() + tankPrice);
                 userTanks.add(boughtTank);
                 u.setTanks(userTanks);
-                System.out.println(userTanks);
                 userRepository.save(u);
-
-
             }else{
                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        session.insert(u);
-        session.fireAllRules();
+
+        for (UserTank usertank: userTanks) {
+            kieSession.insert(usertank);
+        }
+
+        kieSession.insert(u);
+        kieSession.getAgenda().getAgendaGroup("discounts").setFocus();
+        kieSession.fireAllRules();
+
+        kieSession.dispose();
+
+        userRepository.save(u);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path ="/setDiscount")
-    public User setUserDiscount(){
+        public User setUserDiscount(){
+
+        KieSession kieSession = kieContainer.newKieSession();
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         User u = userRepository.findByUsername(currentPrincipalName);
-        session.insert(u);
-        session.fireAllRules();
+        kieSession.insert(u);
+        kieSession.fireAllRules();
         return u;
     }
 }
