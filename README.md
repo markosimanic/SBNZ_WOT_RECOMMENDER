@@ -1,2 +1,6 @@
-# SBNZ_WorldOfTanks
-Application that extends information of player's match history in videogame World of Tanks and recommends new tanks according to player's preference.
+NISAM USPEO DA UPLOAD-UJEM FINALNI VIDEO PROJEKTA CAK I NAKON SMANJENJA KVALITETA
+ISPOD 100 MB GIT MI JAVLJA DA FAJL I DALJE PREMASUJE DOZVOLJENU MEMORIJU(100MB).
+
+
+LINK ZA PREUZIMANJE VIDEA: 
+https://easyupload.io/08ocy5
